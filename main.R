@@ -1,8 +1,8 @@
 # Team Name:               Team Members:               Date:
-# Flying Monkeys           Robbert-Jan Joling          14-01-2015
+# Flying Monkeys           Robbert-Jan Joling          15-01-2015
 #                          Damiano Luzzi
 
-# Import packages
+# Load packages
 library(raster)
 
 # Load data
@@ -15,7 +15,7 @@ load("data/GewataB5.rda")
 load("data/GewataB7.rda")
 load("data/trainingPoly.rda")
 
-# Create raster brick with all bands, remove too high VCF values, change column names
+# Create raster brick with covariate bands bands, remove too high VCF values, change column names
 gewata <- brick(GewataB1, GewataB2, GewataB3, GewataB4, GewataB5, GewataB7)
 vcfGewata[vcfGewata > 100] <- NA
 covs <- addLayer(gewata, vcfGewata)
@@ -34,18 +34,13 @@ valuetable <- as.data.frame(valuetable)
 # Create tree cover prediction model. Band 4 was not used due to the low correlation
 # to the VCF
 lm.treecover <- lm(formula = VCF ~ band1 + band2 + band3 + band5 + band7, data = valuetable)
+
+# Summary of model
 summary(lm.treecover)
 
 # Predict the VCF using the treecover model created
 predVCF <- predict(covs, model=lm.treecover, na.rm = T)
 predVCF[predVCF < 0 | predVCF > 100] <- NA
-
-# Plot predicted VCF, VCF and difference between rasters
-opar <- par(mfrow = c(1,3))
-plot(predVCF, main = "Predicted VCF", zlim=c(0,100))
-plot(vcfGewata, main = "Actual VCF from data")
-plot(difference, main = "Difference in VCF")
-par(mfrow = c(1,1))
 
 # Calculate RMSE
 difference <- overlay(vcfGewata, predVCF, fun = function(x, y){(x-y)}, overwrite = T,
@@ -54,6 +49,13 @@ diff.squared <- difference ^ 2
 diff.mean <- cellStats(diff.squared, stat = 'mean')
 RMSE <- sqrt(diff.mean)
 RMSE
+
+# Plot predicted VCF, VCF and difference between rasters
+opar <- par(mfrow = c(2,2))
+plot(predVCF, main = "Predicted VCF", zlim=c(0,100))
+plot(vcfGewata, main = "Actual VCF from data")
+plot(difference, main = "Difference in VCF", col = colorRampPalette(c("red", "white", "darkgreen"))(30))
+par(mfrow = c(1,1))
 
 # Use training polygons dataframe to create raster polygons
 trainingPoly@data$Code <- as.numeric(trainingPoly@data$Class)
