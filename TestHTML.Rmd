@@ -1,3 +1,13 @@
+---
+title: "Untitled"
+author: "R.J. Joling"
+date: "Thursday, January 15, 2015"
+output: html_document
+---
+
+
+
+```{r}
 # Team Name:               Team Members:               Date:
 # Flying Monkeys           Robbert-Jan Joling          14-01-2015
 #                          Damiano Luzzi
@@ -41,10 +51,10 @@ predVCF <- predict(covs, model=lm.treecover, na.rm = T)
 predVCF[predVCF < 0 | predVCF > 100] <- NA
 
 # Plot predicted VCF, VCF and difference between rasters
-opar <- par(mfrow = c(1,3))
-plot(predVCF, main = "Predicted VCF", zlim=c(0,100))
-plot(vcfGewata, main = "Actual VCF from data")
-plot(difference, main = "Difference in VCF")
+opar <- par(mfrow = c(2,2))
+plot(predVCF, main = "Predicted")
+plot(vcfGewata, main = "Actual")
+plot(difference, main = "Difference")
 par(mfrow = c(1,1))
 
 # Calculate RMSE
@@ -75,3 +85,8 @@ RMSE.cov
 
 # The difference between the predicted and actual VCF was not the same for
 # all three classes as seen by the values of the RMSE for the classes
+
+
+```
+
+
