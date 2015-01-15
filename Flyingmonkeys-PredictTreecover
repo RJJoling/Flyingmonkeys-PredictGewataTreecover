@@ -1,3 +1,12 @@
+---
+title: 'Advanced Raster Analysis: Predicting Tree Cover'
+author: "Robbert-Jan Joling & Damiano Luzzi"
+date: "Thursday, January 15, 2015"
+output: html_document
+---
+
+
+```{r}
 # Team Name:               Team Members:               Date:
 # Flying Monkeys           Robbert-Jan Joling          15-01-2015
 #                          Damiano Luzzi
@@ -77,3 +86,5 @@ RMSE.cov
 
 # The difference between the predicted and actual VCF was not the same for
 # all three classes as seen by the values of the RMSE for the classes
+```
+
